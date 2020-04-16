@@ -1,3 +1,3 @@
-module github.com/midoblgsm/horizonDevops/shoppingcart
+module github.com/midoblgsm/shoppingcart
 
 go 1.13

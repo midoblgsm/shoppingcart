@@ -1,21 +1,20 @@
 package cart
 
 import (
-	"fmt"
+	"log"
 
-	"github.com/midoblgsm/horizonDevops/shoppingcart/resources"
+	"github.com/midoblgsm/shoppingcart/resources"
 )
 
 type CartInterface interface {
-	AddItem(resources.Item) error
-	RemoveItem(string, int) error
-	TotalAmount() (float32, error)
-	TotalUniqueItems() (int, error)
-	TotalUnits() (int, error)
+	AddItem(resources.AddItemRequest) resources.AddItemResponse
+	RemoveItem(resources.RemoveItemRequest) resources.RemoveItemResponse
+	TotalCost() resources.TotalCostResponse
 }
 
 type Cart struct {
 	Items map[string]resources.Item
+	Total float32
 }
 
 func NewCart() CartInterface {
@@ -23,21 +22,45 @@ func NewCart() CartInterface {
 		Items: map[string]resources.Item{}}
 }
 
-func (c *Cart) AddItem(item resources.Item) error {
-	fmt.Println("Not implemented")
-	return nil
+func (c *Cart) AddItem(request resources.AddItemRequest) resources.AddItemResponse {
+	log.Println("entering-add-item")
+	defer log.Println("exiting-add-item")
+
+	existantItem, ok := c.Items[request.Item.ID]
+	if !ok {
+		c.Items[request.Item.ID] = request.Item
+	} else {
+		existantItem.Quantity = existantItem.Quantity + request.Item.Quantity
+		c.Items[request.Item.ID] = existantItem
+	}
+	c.Total = c.Total + (float32(request.Item.Quantity) * request.Item.Price)
+	return resources.AddItemResponse{}
 }
 
-func (c *Cart) RemoveItem(itemID string, qt int) error {
-	return nil
-}
+func (c *Cart) RemoveItem(request resources.RemoveItemRequest) resources.RemoveItemResponse {
+	log.Println("entering-remove-item")
+	defer log.Println("exiting-remove-item")
+	if request.Quantity < 1 {
+		return resources.RemoveItemResponse{}
+	}
 
-func (c *Cart) TotalAmount() (float32, error) {
-	return 0, nil
+	existantItem, ok := c.Items[request.ItemID]
+	if !ok {
+		return resources.RemoveItemResponse{}
+	}
+
+	if existantItem.Quantity < request.Quantity {
+		delete(c.Items, request.ItemID)
+		c.Total = c.Total - (float32(existantItem.Quantity) * existantItem.Price)
+	} else {
+		existantItem.Quantity = existantItem.Quantity - request.Quantity
+		c.Items[request.ItemID] = existantItem
+		c.Total = c.Total - (float32(request.Quantity) * existantItem.Price)
+	}
+
+	return resources.RemoveItemResponse{}
 }
-func (c *Cart) TotalUniqueItems() (int, error) {
-	return 0, nil
-}
-func (c *Cart) TotalUnits() (int, error) {
-	return 0, nil
+func (c *Cart) TotalCost() resources.TotalCostResponse {
+	return resources.TotalCostResponse{
+		TotalCost: c.Total}
 }
