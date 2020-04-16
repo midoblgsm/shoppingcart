@@ -1,8 +1,10 @@
 package main
 
 import (
-	"github.com/midoblgsm/horizonDevops/shoppingcart/cart"
-	"github.com/midoblgsm/horizonDevops/shoppingcart/resources"
+	"fmt"
+
+	"github.com/midoblgsm/shoppingcart/cart"
+	"github.com/midoblgsm/shoppingcart/resources"
 )
 
 func main() {
@@ -16,4 +18,5 @@ func main() {
 	}
 
 	cart.AddItem(potato)
+	fmt.Printf("Cart %#v \n", cart)
 }

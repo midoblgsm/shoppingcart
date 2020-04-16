@@ -3,15 +3,13 @@ package cart
 import (
 	"fmt"
 
-	"github.com/midoblgsm/horizonDevops/shoppingcart/resources"
+	"github.com/midoblgsm/shoppingcart/resources"
 )
 
 type CartInterface interface {
 	AddItem(resources.Item) error
 	RemoveItem(string, int) error
-	TotalAmount() (float32, error)
-	TotalUniqueItems() (int, error)
-	TotalUnits() (int, error)
+	TotalCost() (float32, error)
 }
 
 type Cart struct {
@@ -32,12 +30,6 @@ func (c *Cart) RemoveItem(itemID string, qt int) error {
 	return nil
 }
 
-func (c *Cart) TotalAmount() (float32, error) {
-	return 0, nil
-}
-func (c *Cart) TotalUniqueItems() (int, error) {
-	return 0, nil
-}
-func (c *Cart) TotalUnits() (int, error) {
+func (c *Cart) TotalCost() (float32, error) {
 	return 0, nil
 }
