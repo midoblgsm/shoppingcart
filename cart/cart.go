@@ -2,18 +2,20 @@ package cart
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/midoblgsm/shoppingcart/resources"
 )
 
 type CartInterface interface {
-	AddItem(resources.Item) error
-	RemoveItem(string, int) error
-	TotalCost() (float32, error)
+	AddItem(resources.AddItemRequest) resources.AddItemResponse
+	RemoveItem(resources.RemoveItemRequest) resources.RemoveItemResponse
+	TotalCost() resources.TotalCostResponse
 }
 
 type Cart struct {
 	Items map[string]resources.Item
+	Total float32
 }
 
 func NewCart() CartInterface {
@@ -21,15 +23,21 @@ func NewCart() CartInterface {
 		Items: map[string]resources.Item{}}
 }
 
-func (c *Cart) AddItem(item resources.Item) error {
-	fmt.Println("Not implemented")
-	return nil
+func (c *Cart) AddItem(request resources.AddItemRequest) resources.AddItemResponse {
+	log.Println("entering-add-item")
+	defer log.Println("exiting-add-item")
+
+	return resources.AddItemResponse{Error: fmt.Errorf("not implemented")}
 }
 
-func (c *Cart) RemoveItem(itemID string, qt int) error {
-	return nil
+func (c *Cart) RemoveItem(request resources.RemoveItemRequest) resources.RemoveItemResponse {
+	log.Println("entering-remove-item")
+	defer log.Println("exiting-remove-item")
+
+	return resources.RemoveItemResponse{Error: fmt.Errorf("not implemented")}
 }
 
-func (c *Cart) TotalCost() (float32, error) {
-	return 0, nil
+func (c *Cart) TotalCost() resources.TotalCostResponse {
+	return resources.TotalCostResponse{Error: fmt.Errorf("not implemented")}
+	// return resources.TotalCostResponse{}
 }
