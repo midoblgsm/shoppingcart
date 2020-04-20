@@ -1,17 +1,13 @@
 #!/bin/bash
 
-#
-# Copyright (c) 2019 LG Electronics Inc.
-# SPDX-License-Identifier: Apache-2.0
-#
-
 set -e -u
+
+cd $(dirname $0)/..
 
 export GO111MODULE=on
 
 echo "getting dependencies..."
-go get -u github.com/onsi/ginkgo/ginkgo  
-go get -u github.com/onsi/gomega/...
+go mod download
 
 echo "running tests..."
 
