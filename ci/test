@@ -10,7 +10,8 @@ set -e -u
 export GO111MODULE=on
 
 echo "getting dependencies..."
-go mod download
+go get -u github.com/onsi/ginkgo/ginkgo  
+go get -u github.com/onsi/gomega/...
 
 echo "running tests..."
 
