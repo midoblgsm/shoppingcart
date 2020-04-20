@@ -9,6 +9,9 @@ set -e -u
 
 export GO111MODULE=on
 
+echo "getting dependencies..."
+go mod download
+
 echo "running tests..."
 
 ginkgo -r   "$@"
