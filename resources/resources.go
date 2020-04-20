@@ -24,6 +24,11 @@ type RemoveItemResponse struct {
 	Error error
 }
 
+type TotalItemsResponse struct {
+	TotalItems int
+	Error      error
+}
+
 type TotalCostResponse struct {
 	TotalCost float32
 	Error     error
