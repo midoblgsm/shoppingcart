@@ -27,6 +27,7 @@ func NewCart() CartInterface {
 func (c *Cart) AddItem(request resources.AddItemRequest) resources.AddItemResponse {
 	log.Println("entering-add-item")
 	defer log.Println("exiting-add-item")
+
 	if (resources.Item{}) == request.Item {
 		log.Printf("cannot-add-an-empty-item")
 		return resources.AddItemResponse{Error: fmt.Errorf("cannot add an empty item")}
@@ -41,27 +42,50 @@ func (c *Cart) AddItem(request resources.AddItemRequest) resources.AddItemRespon
 		return resources.AddItemResponse{Error: fmt.Errorf("cannot add an item without a price")}
 	}
 
-	if request.Item.Quantity == 0 {
+	if request.Item.Quantity <= 0 {
 		log.Printf("request-quantity-is-zero-defaulting-to-1")
 		request.Item.Quantity = 1
 	}
 
 	existantItem, ok := c.Items[request.Item.ID]
 	if !ok {
+		log.Printf("adding-new-item")
 		c.Items[request.Item.ID] = request.Item
+
+	} else {
+		existantItem.Quantity = existantItem.Quantity + request.Item.Quantity
+		c.Items[request.Item.ID] = existantItem
 	}
 
-	existantItem.Quantity = existantItem.Quantity + request.Item.Quantity
-	c.Items[request.Item.ID] = existantItem
-
 	c.Total = c.Total + (float32(request.Item.Quantity) * request.Item.Price)
-
 	return resources.AddItemResponse{}
 }
 
 func (c *Cart) RemoveItem(request resources.RemoveItemRequest) resources.RemoveItemResponse {
 	log.Println("entering-remove-item")
 	defer log.Println("exiting-remove-item")
+	if request.ItemID == "" {
+		log.Println("ItemID is empty")
+		return resources.RemoveItemResponse{}
+	}
+	if request.Quantity == 0 {
+		log.Println("Quantity is 0")
+		return resources.RemoveItemResponse{}
+	}
+	existantItem, ok := c.Items[request.ItemID]
+	if !ok {
+		log.Printf("Item %s does not exist", request.ItemID)
+		return resources.RemoveItemResponse{}
+	}
+
+	if existantItem.Quantity > request.Quantity {
+		existantItem.Quantity = existantItem.Quantity - request.Quantity
+		c.Total = c.Total - (float32(request.Quantity) * existantItem.Price)
+		c.Items[request.ItemID] = existantItem
+	} else {
+		c.Total = c.Total - (float32(existantItem.Quantity) * existantItem.Price)
+		delete(c.Items, request.ItemID)
+	}
 
 	return resources.RemoveItemResponse{}
 }

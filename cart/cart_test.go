@@ -161,6 +161,106 @@ var _ = Describe("Cart", func() {
 			Expect(items.TotalItems).To(Equal(0))
 
 		})
+
+		It("should not modify total or items when ID does not exist", func() {
+			req := resources.RemoveItemRequest{ItemID: "vg0"}
+			resp := myCart.RemoveItem(req)
+
+			Expect(resp.Error).NotTo(HaveOccurred())
+
+			cost := myCart.TotalCost()
+			Expect(cost.Error).NotTo(HaveOccurred())
+			Expect(cost.TotalCost).To(Equal(float32(0)))
+
+			items := myCart.TotalItems()
+			Expect(items.Error).NotTo(HaveOccurred())
+			Expect(items.TotalItems).To(Equal(0))
+
+		})
+
+		Context(".WhenItemExists", func() {
+			var (
+				item0 resources.Item
+				req   resources.AddItemRequest
+			)
+			BeforeEach(func() {
+				item0 = resources.Item{
+					ID:       "vg0",
+					Name:     "potato",
+					Price:    1.0,
+					Quantity: 3,
+				}
+				req = resources.AddItemRequest{Item: item0}
+				res := myCart.AddItem(req)
+				Expect(res.Error).NotTo(HaveOccurred())
+			})
+			It("should not modify anything when quantity is 0", func() {
+				req := resources.RemoveItemRequest{ItemID: "vg0"}
+
+				intialCost := myCart.TotalCost()
+				Expect(intialCost.Error).NotTo(HaveOccurred())
+				Expect(intialCost.TotalCost).To(Equal(float32(3)))
+
+				initialItems := myCart.TotalItems()
+				Expect(initialItems.Error).NotTo(HaveOccurred())
+				Expect(initialItems.TotalItems).To(Equal(1))
+
+				resp := myCart.RemoveItem(req)
+
+				Expect(resp.Error).NotTo(HaveOccurred())
+
+				cost := myCart.TotalCost()
+				Expect(cost.Error).NotTo(HaveOccurred())
+				Expect(cost.TotalCost).To(Equal(intialCost.TotalCost))
+
+				items := myCart.TotalItems()
+				Expect(items.Error).NotTo(HaveOccurred())
+				Expect(items.TotalItems).To(Equal(initialItems.TotalItems))
+
+			})
+
+			It("should modify cost and not modify totalitems when quantity to delete is lower than existant quantity", func() {
+				req := resources.RemoveItemRequest{ItemID: "vg0", Quantity: 1}
+
+				intialCost := myCart.TotalCost()
+				Expect(intialCost.Error).NotTo(HaveOccurred())
+				Expect(intialCost.TotalCost).To(Equal(float32(3)))
+
+				initialItems := myCart.TotalItems()
+				Expect(initialItems.Error).NotTo(HaveOccurred())
+				Expect(initialItems.TotalItems).To(Equal(1))
+
+				resp := myCart.RemoveItem(req)
+
+				Expect(resp.Error).NotTo(HaveOccurred())
+
+				cost := myCart.TotalCost()
+				Expect(cost.Error).NotTo(HaveOccurred())
+				Expect(cost.TotalCost).To(Equal(intialCost.TotalCost - 1))
+
+				items := myCart.TotalItems()
+				Expect(items.Error).NotTo(HaveOccurred())
+				Expect(items.TotalItems).To(Equal(initialItems.TotalItems))
+
+			})
+
+			It("should modify cost and totalitems when quantity to delete is >= than existant quantity", func() {
+				req := resources.RemoveItemRequest{ItemID: "vg0", Quantity: 4}
+
+				resp := myCart.RemoveItem(req)
+
+				Expect(resp.Error).NotTo(HaveOccurred())
+
+				cost := myCart.TotalCost()
+				Expect(cost.Error).NotTo(HaveOccurred())
+				Expect(cost.TotalCost).To(Equal(float32(0)))
+
+				items := myCart.TotalItems()
+				Expect(items.Error).NotTo(HaveOccurred())
+				Expect(items.TotalItems).To(Equal(0))
+
+			})
+		})
 	})
 
 })
