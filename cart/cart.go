@@ -12,6 +12,7 @@ type CartInterface interface {
 	RemoveItem(resources.RemoveItemRequest) resources.RemoveItemResponse
 	TotalItems() resources.TotalItemsResponse
 	TotalCost() resources.TotalCostResponse
+	GetItems() resources.GetItemsResponse
 }
 
 type Cart struct {
@@ -100,4 +101,10 @@ func (c *Cart) TotalCost() resources.TotalCostResponse {
 	log.Println("entering-total-cost")
 	defer log.Println("exiting-total-cost")
 	return resources.TotalCostResponse{TotalCost: c.Total}
+}
+
+func (c *Cart) GetItems() resources.GetItemsResponse {
+	log.Println("entering-total-cost")
+	defer log.Println("exiting-total-cost")
+	return resources.GetItemsResponse{Items: c.Items}
 }

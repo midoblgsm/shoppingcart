@@ -19,7 +19,7 @@ func NewCartHandler(ct context.Context, c cart.CartInterface) CartHandler {
 	return CartHandler{ctx: ct, cart: c}
 }
 
-//CreateDataStream creates a handlerFunc for crating a new PullPush DataStream
+//AddItem creates a handlerFunc for adding an Item
 func (c *CartHandler) AddItem() http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 		log.Printf("entering-AddItem")
@@ -40,6 +40,60 @@ func (c *CartHandler) AddItem() http.HandlerFunc {
 			return
 		}
 		log.Printf("cart %#v", c.cart)
+		utils.WriteResponse(w, http.StatusOK, resp)
+	}
+}
+
+//RemoveItem creates a handlerFunc for removing an Item
+func (c *CartHandler) RemoveItem() http.HandlerFunc {
+	return func(w http.ResponseWriter, req *http.Request) {
+		log.Printf("entering-RemoveItem")
+		defer log.Printf("exiting-RemoveItem")
+
+		removeItemRequest := resources.RemoveItemRequest{}
+		err := utils.UnmarshalDataFromRequest(req, &removeItemRequest)
+		if err != nil {
+			log.Printf("error-unmarshalling-data-%s", err.Error())
+			utils.WriteResponse(w, 409, &resources.RemoveItemResponse{Error: err})
+			return
+		}
+
+		resp := c.cart.RemoveItem(removeItemRequest)
+		if resp.Error != nil {
+			log.Printf("error-removing-item")
+			utils.WriteResponse(w, 409, &resp)
+			return
+		}
+		utils.WriteResponse(w, http.StatusOK, resp)
+	}
+}
+
+func (c *CartHandler) TotalCost() http.HandlerFunc {
+	return func(w http.ResponseWriter, req *http.Request) {
+		log.Printf("entering-TotalCost")
+		defer log.Printf("exiting-TotalCost")
+
+		resp := c.cart.TotalCost()
+		if resp.Error != nil {
+			log.Printf("error-getting-totalcost")
+			utils.WriteResponse(w, 409, &resp)
+			return
+		}
+		utils.WriteResponse(w, http.StatusOK, resp)
+	}
+}
+
+func (c *CartHandler) GetItems() http.HandlerFunc {
+	return func(w http.ResponseWriter, req *http.Request) {
+		log.Printf("entering-getItems")
+		defer log.Printf("exiting-getItems")
+
+		resp := c.cart.GetItems()
+		if resp.Error != nil {
+			log.Printf("error-getting-items")
+			utils.WriteResponse(w, 409, &resp)
+			return
+		}
 		utils.WriteResponse(w, http.StatusOK, resp)
 	}
 }

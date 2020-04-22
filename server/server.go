@@ -26,8 +26,9 @@ func (c *CartServer) InitializeHandler() http.Handler {
 	router := mux.NewRouter()
 
 	router.HandleFunc("/v1/item", c.handler.AddItem()).Methods("POST")
-	// router.HandleFunc("/v1/item", c.handler.RemoveItem()).Methods("DELETE")
-	// router.HandleFunc("/v1/cart/totalAmount", c.handler.TotalAmount()).Methods("GET")
+	router.HandleFunc("/v1/item", c.handler.RemoveItem()).Methods("DELETE")
+	router.HandleFunc("/v1/cart/totalCost", c.handler.TotalCost()).Methods("GET")
+	router.HandleFunc("/v1/cart/items", c.handler.GetItems()).Methods("GET")
 	return router
 }
 

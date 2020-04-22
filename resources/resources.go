@@ -37,3 +37,8 @@ type TotalCostResponse struct {
 	TotalCost float32 `json:"totalcost"`
 	Error     error   `json:"error"`
 }
+
+type GetItemsResponse struct {
+	Items map[string]Item `json:"items"`
+	Error error           `json:"error"`
+}
