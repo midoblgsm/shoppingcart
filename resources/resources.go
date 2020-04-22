@@ -1,35 +1,39 @@
 package resources
 
+type Config struct {
+	Port int
+}
+
 type Item struct {
-	ID       string
-	Name     string
-	Price    float32
-	Quantity int
+	ID       string  `json:"id"`
+	Name     string  `json:"name"`
+	Price    float32 `json:"price"`
+	Quantity int     `json:"quantity"`
 }
 
 type AddItemRequest struct {
-	Item Item
+	Item Item `json:"item"`
 }
 
 type AddItemResponse struct {
-	Error error
+	Error error `json:"error"`
 }
 
 type RemoveItemRequest struct {
-	ItemID   string
-	Quantity int
+	ItemID   string `json:"itemid"`
+	Quantity int    `json:"quantity"`
 }
 
 type RemoveItemResponse struct {
-	Error error
+	Error error `json:"error"`
 }
 
 type TotalItemsResponse struct {
-	TotalItems int
-	Error      error
+	TotalItems int   `json:"totalitems"`
+	Error      error `json:"error"`
 }
 
 type TotalCostResponse struct {
-	TotalCost float32
-	Error     error
+	TotalCost float32 `json:"totalcost"`
+	Error     error   `json:"error"`
 }
