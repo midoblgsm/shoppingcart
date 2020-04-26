@@ -41,6 +41,6 @@ func (c *CartServer) Start() error {
 	return http.ListenAndServe(fmt.Sprintf(":%d", c.config.Port), nil)
 }
 func (c *CartServer) printStartMsg() {
-	log.Printf(fmt.Sprintf("Starting data stream server on port %d ....", c.config.Port))
-	log.Printf("CTL-C to exit/stop data-stream-delivery service")
+	log.Printf(fmt.Sprintf("Starting shoppingcart on port %d ....", c.config.Port))
+	log.Printf("CTL-C to exit/stop shoppingcart service")
 }
