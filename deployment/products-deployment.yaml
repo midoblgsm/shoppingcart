@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: products
+    version: 'k8s1'
+  name: products
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: products
+      version: 'k8s1'
+  template:
+    metadata:
+      labels:
+        app: products
+        version: 'k8s1'
+    spec:
+      containers:
+        - image: midoblgsm/shopping-cart:dev
+          name: products
+          ports:
+            - containerPort: 7778
+          imagePullPolicy: Always
+          resources:
+            requests:
+              memory: '50Mi'
+              cpu: '100m'
+            limits:
+              memory: '70Mi'
+              cpu: '200m'
