@@ -1,22 +1,21 @@
 package main
 
 import (
-	"fmt"
+	"context"
+	"log"
 
 	"github.com/midoblgsm/shoppingcart/cart"
 	"github.com/midoblgsm/shoppingcart/resources"
+	"github.com/midoblgsm/shoppingcart/server"
 )
 
 func main() {
+	ctx := context.Background()
+	config := resources.Config{Port: 7778}
 	cart := cart.NewCart()
 
-	potato := resources.Item{
-		ID:       "vg1",
-		Name:     "Potato",
-		Price:    1,
-		Quantity: 2,
-	}
+	handler := server.NewCartHandler(ctx, cart)
+	server := server.NewCartServer(ctx, handler, config)
 
-	cart.AddItem(potato)
-	fmt.Printf("Cart %#v \n", cart)
+	log.Printf("starting-server %#v", server.Start())
 }
