@@ -2,24 +2,24 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: products
+    app: shoppingcart
     version: 'k8s1'
-  name: products
+  name: shoppingcart
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: products
+      app: shoppingcart
       version: 'k8s1'
   template:
     metadata:
       labels:
-        app: products
+        app: shoppingcart
         version: 'k8s1'
     spec:
       containers:
         - image: midoblgsm/shopping-cart:dev
-          name: products
+          name: shoppingcart
           ports:
             - containerPort: 7778
           imagePullPolicy: Always
