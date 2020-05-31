@@ -1,5 +1,5 @@
 # shoppingcart
-A simple app to learn Go
+A simple app to learn Go programming during the DevOps class
 
 
 After setting up your Go environment, please clone this repository:
