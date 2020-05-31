@@ -1,5 +1,5 @@
 # shoppingcart
-A simple app to learn Go programming during the DevOps Zero to Hero class
+A simple app to learn Go programming during the DevOps Zero to Hero class.
 
 
 After setting up your Go environment, please clone this repository:
@@ -20,3 +20,5 @@ Open the code in your favorite editor and you are ready to start coding. To test
 ```
 
 It is time to implement your methods.
+
+You need to use checkout -b for creating a new branch.
