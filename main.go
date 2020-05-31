@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"github.com/midoblgsm/shoppingcart/cart"
@@ -10,7 +11,7 @@ import (
 )
 
 func main() {
-	mohamed
+	fmt.Println("coorect code")
 	ctx := context.Background()
 	config := resources.Config{Port: 7778}
 	cart := cart.NewCart()
